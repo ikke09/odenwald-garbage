@@ -15,6 +15,17 @@
       "disableOptimisticBPs": true,
       "program": "${workspaceFolder}/service/node_modules/jest/bin/jest.js",
       "outFiles": ["**/__tests__/**/*.[jt]s?(x)", "**/?(*.)+(spec|test).[jt]s?(x)"]
+    },
+    {
+      "type": "node",
+      "name": "Debug Service",
+      "request": "launch",
+      "args": ["--debug"],
+      "cwd": "${workspaceFolder}/service",
+      "console": "externalTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "disableOptimisticBPs": true,
+      "program": "${workspaceFolder}/service/bin/www"
     }
   ]
 }

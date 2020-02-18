@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "debug": "set DEBUG=service* & npm start",
+    "debug": "set DEBUG=service* & npx nodemon ./bin/www",
     "test": "jest"
   },
   "dependencies": {
@@ -12,7 +12,9 @@
     "cookie-parser": "~1.4.4",
     "cors": "^2.8.5",
     "debug": "~2.6.9",
+    "dotenv": "^8.2.0",
     "express": "~4.16.1",
+    "helmet": "^3.21.2",
     "http-errors": "~1.6.3",
     "moment": "^2.24.0",
     "morgan": "~1.9.1",
@@ -22,6 +24,7 @@
     "eslint": "^6.1.0",
     "eslint-config-airbnb": "^18.0.1",
     "eslint-plugin-import": "^2.18.2",
-    "jest": "^25.1.0"
+    "jest": "^25.1.0",
+    "nodemo": "^1.0.0"
   }
 }
