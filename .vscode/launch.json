@@ -26,6 +26,19 @@
       "internalConsoleOptions": "neverOpen",
       "disableOptimisticBPs": true,
       "program": "${workspaceFolder}/service/bin/www"
+    },
+    {
+      "name": "Debug Client",
+      "type": "firefox",
+      "request": "launch",
+      "url": "http://localhost:3000",
+      "webRoot": "${workspaceFolder}/src",
+      "pathMappings": [
+        {
+          "url": "http://localhost:3000",
+          "path": "${webRoot}/*"
+        }
+      ]
     }
   ]
 }
