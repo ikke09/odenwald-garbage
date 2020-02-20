@@ -1,5 +1,5 @@
 import React from 'react';
-import './app.css';
+import './app.component.css';
 
 const App = () => {
   return (
