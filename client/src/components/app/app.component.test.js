@@ -1,26 +1,11 @@
 import React from 'react';
-import { render, unmountComponentAtNode } from 'react-dom';
-import { act } from 'react-dom/test-utils';
-
+import { create } from 'react-test-renderer';
 import App from './app.component';
 
-let container = null;
-beforeEach(() => {
-  // setup a DOM element as a render target
-  container = document.createElement('div');
-  document.body.appendChild(container);
-});
-
-afterEach(() => {
-  // cleanup on exiting
-  unmountComponentAtNode(container);
-  container.remove();
-  container = null;
-});
-
-it('should render App', () => {
-  act(() => {
-    render(<App />, container);
+describe('App component', () => {
+  test('Matches the snapshot', () => {
+    const app = create(<App />);
+    const json = app.toJSON();
+    expect(json).not.toBe('');
   });
-  expect(container.textContent).toBe('App loaded!');
 });
