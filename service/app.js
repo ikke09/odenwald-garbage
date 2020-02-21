@@ -8,6 +8,7 @@ const cors = require('cors');
 const helmet = require('helmet');
 
 const indexRouter = require('./routes/index.route');
+const cityDistrictsRouter = require('./routes/city-districts.route');
 const garbageRouter = require('./routes/garbage.route');
 
 const app = express();
@@ -21,6 +22,7 @@ app.use(helmet());
 
 app.use('/', indexRouter);
 app.use('/api', indexRouter);
+app.use('/api/citydistricts', cityDistrictsRouter);
 app.use('/api/garbage', garbageRouter);
 
 app.use(function(req, res, next) {
