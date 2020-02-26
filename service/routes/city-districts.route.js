@@ -6,4 +6,8 @@ router.get('/', function(req, res, next) {
   res.json(cityDistricts);
 });
 
+router.get('/:city', function(req, res, next) {
+  res.json(cityDistricts[req.params['city']]);
+});
+
 module.exports = router;
