@@ -25,6 +25,7 @@
     "eslint-config-airbnb": "^18.0.1",
     "eslint-plugin-import": "^2.18.2",
     "jest": "^25.1.0",
-    "nodemo": "^1.0.0"
+    "nodemo": "^1.0.0",
+    "supertest": "^4.0.2"
   }
 }
