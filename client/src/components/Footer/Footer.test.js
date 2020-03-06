@@ -3,7 +3,7 @@ import { create } from 'react-test-renderer';
 import Footer from './Footer';
 
 describe('Footer component', () => {
-  test('should be able to render', () => {
+  test('should be created', () => {
     const footer = create(<Footer />);
     const json = footer.toJSON();
     expect(json).not.toBe('');

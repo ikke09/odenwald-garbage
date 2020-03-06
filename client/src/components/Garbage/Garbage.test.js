@@ -1,11 +1,11 @@
 import React from 'react';
 import { create } from 'react-test-renderer';
-import App from './App';
+import Garbage from './Garbage';
 
-describe('App component', () => {
+describe('Garbage component', () => {
   test('should be created', () => {
-    const app = create(<App />);
-    const json = app.toJSON();
+    const garbage = create(<Garbage />);
+    const json = garbage.toJSON();
     expect(json).not.toBe('');
   });
 });
