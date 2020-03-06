@@ -1,6 +1,6 @@
 import React from 'react';
-import './app.component.css';
-import Footer from '../footer/footer.component';
+import './App.css';
+import Footer from '../Footer/Footer';
 
 const App = () => {
   return (
