@@ -1,20 +1,7 @@
-const url = (city) => {
-  const domain = process.env.APIDOMAIN || 'localhost:3000';
-  return `${domain}/api/citydistricts/${city}`;
-};
+import loadData from './Http-Proxy';
 
-const getCityDistricts = async () => {
-  return await fetch({
-    method: 'GET',
-    url: url()
-  });
-};
+const getCityDistricts = async () => await loadData('cityDistricts');
 
-const getDistricts = async (city) => {
-  return await fetch({
-    method: 'GET',
-    url: url(city)
-  });
-};
+const getDistricts = async (city) => await loadData(`cityDistricts/${city}`);
 
 export { getCityDistricts, getDistricts };
