@@ -24,6 +24,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(helmet());
 app.disable('x-powered-by');
+
 app.use('/', indexRouter);
 app.use('/api', indexRouter);
 app.use('/api/citydistricts', cityDistrictsRouter);
@@ -35,9 +36,11 @@ app.use(function(req, res, next) {
 
 // error handler
 app.use(function(err, req, res, next) {
-  res.locals.message = err.message;
-  res.locals.error = process.env.DEBUG ? err : {};
-  res.status(err.status || 500).send();
+  res.status(err.status || 500);
+  res.json({
+    message: err.message,
+    error: rocess.env.DEBUG ? err.stack : {}
+  });
 });
 
 module.exports = app;
