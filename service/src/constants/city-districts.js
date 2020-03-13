@@ -8,8 +8,7 @@ const cityDistricts = {
     'Momart',
     'Nieder-Kinzig',
     'Ober-Kinzig',
-    'Zell',
-    'Alle'
+    'Zell'
   ],
   Brensbach: [
     'Kerngemeinde',
@@ -21,20 +20,10 @@ const cityDistricts = {
     'Nieder-Kainsbach',
     'Stierbach',
     'Wallbach',
-    'Wersau',
-    'Alle'
+    'Wersau'
   ],
-  Breuberg: [
-    'Hainstadt',
-    'Mühlhausen',
-    'Neustadt',
-    'Rai-Breitenbach',
-    'Rosenbach',
-    'Wald-Amorbach',
-    'Sandbach',
-    'Alle'
-  ],
-  Brombachtal: ['Birkert', 'Böllstein', 'Hembach', 'Herrenwäldchen', 'Kirchbrombach', 'Langenbrombach', 'Alle'],
+  Breuberg: ['Hainstadt', 'Mühlhausen', 'Neustadt', 'Rai-Breitenbach', 'Rosenbach', 'Wald-Amorbach', 'Sandbach'],
+  Brombachtal: ['Birkert', 'Böllstein', 'Hembach', 'Herrenwäldchen', 'Kirchbrombach', 'Langenbrombach'],
   Erbach: [
     'Kernstadt',
     'Bullau',
@@ -49,8 +38,7 @@ const cityDistricts = {
     'Haisterbach',
     'Lauerbach',
     'Rossbach',
-    'Schönnen',
-    'Alle'
+    'Schönnen'
   ],
   'Fränkisch-Crumbach': ['Fränkisch-Crumbach'],
   Höchst: [
@@ -62,10 +50,9 @@ const cityDistricts = {
     'Hetschbach',
     'Hummetroth',
     'Mümling-Grumbach',
-    'Pfirschbach',
-    'Alle'
+    'Pfirschbach'
   ],
-  Lützelbach: ['Kerngemeinde', 'Breitenbrunn', 'Haingrund', 'Seckmauern', 'Rimhorn', 'Alle'],
+  Lützelbach: ['Kerngemeinde', 'Breitenbrunn', 'Haingrund', 'Seckmauern', 'Rimhorn'],
   Michelstadt: [
     'Kernstadt',
     'Asselbrunn',
@@ -75,10 +62,9 @@ const cityDistricts = {
     'Stockheim',
     'Vielbrunn',
     'Weiten-Gesäß',
-    'Würzberg',
-    'Alle'
+    'Würzberg'
   ],
-  Mossautal: ['Güttersbach', 'Hiltersklingen', 'Hüttenthal', 'Ober-Mossau', 'Unter-Mossau', 'Alle'],
+  Mossautal: ['Güttersbach', 'Hiltersklingen', 'Hüttenthal', 'Ober-Mossau', 'Unter-Mossau'],
   Oberzent: [
     'Airlenbach',
     'Beerfelden',
@@ -98,8 +84,7 @@ const cityDistricts = {
     'Raubach',
     'Rothenberg',
     'Schöllenbach',
-    'Unter-Sensbach',
-    'Alle'
+    'Unter-Sensbach'
   ],
   Reichelsheim: [
     'Kerngemeinde',
@@ -119,8 +104,7 @@ const cityDistricts = {
     'Rohrbach',
     'Spreng',
     'Unter-Ostern',
-    'Vierstöck',
-    'Alle'
+    'Vierstöck'
   ]
 };
 
