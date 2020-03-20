@@ -8,7 +8,7 @@ const config = require('dotenv').config();
 
 const indexRouter = require('./routes/index.route');
 const cityDistrictsRouter = require('./routes/city-districts.route');
-const garbageRouter = require('./routes/garbage.route');
+const garbageRouter = require('./routes/garbages.route');
 
 const app = express();
 
@@ -28,7 +28,7 @@ app.disable('x-powered-by');
 app.use('/', indexRouter);
 app.use('/api', indexRouter);
 app.use('/api/citydistricts', cityDistrictsRouter);
-app.use('/api/garbage', garbageRouter);
+app.use('/api/garbages', garbageRouter);
 
 app.use(function(req, res, next) {
   next(createError(404));
