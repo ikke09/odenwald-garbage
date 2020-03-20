@@ -17,34 +17,27 @@ const App = () => {
   const [cityDistricts, setCityDistricts] = useState(null);
   const [currentCity, setCurrentCity] = useState(null);
   const [currentDistrict, setCurrentDistrict] = useState(null);
-  const [event, setEvent] = useState(null);
+  const [events, setEvents] = useState(null);
 
-  // load preferences from localStorage or environment
-  // fetching city-districts map
   useEffect(() => {
     const fetchData = async () => {
       console.log('fetching cityDistricts data');
       const data = await getCityDistricts();
       setCityDistricts(data);
     };
-    const loadLocalSettings = () => {
-      const storageData = localStorage.getItem(process.env.REACT_APP_LOCALSTORAGE_KEY);
-      if (storageData) {
-        const defaults = JSON.parse(storageData);
-        console.log('locale settings loaded', defaults);
-        setDefaultPreferences(defaults);
-        setCurrentCity(defaults.city);
-        setCurrentDistrict(defaults.district);
-      }
-    };
-    const updateInitialized = () => {
-      console.log('Initialized!!!');
-      setIsInitialized(true);
-    };
 
     fetchData();
-    loadLocalSettings();
-    updateInitialized();
+  }, []);
+
+  useEffect(() => {
+    const storageData = localStorage.getItem(process.env.REACT_APP_LOCALSTORAGE_KEY);
+    if (storageData) {
+      const defaults = JSON.parse(storageData);
+      console.log('locale settings loaded', defaults);
+      setDefaultPreferences(defaults);
+      setCurrentCity(defaults.city);
+      setCurrentDistrict(defaults.district);
+    }
   }, []);
 
   useEffect(() => {
@@ -52,14 +45,17 @@ const App = () => {
       const day = moment().format('DD-MM');
       console.log('fetching event data for', { currentCity, currentDistrict, day });
       const data = await getGarbageEventsOn(currentCity, currentDistrict, day);
-      setEvent(data);
+      setEvents(data);
     };
     if (currentCity && currentDistrict) {
       fetchEventData();
     }
   }, [currentDistrict, currentCity]);
 
-  // update preferences
+  useEffect(() => {
+    setIsInitialized(!!cityDistricts && !!defaultPreferences && !!events);
+  }, [cityDistricts, events]);
+
   useEffect(() => {
     console.log('Updating preferences');
     const preferences = {
@@ -105,7 +101,7 @@ const App = () => {
   return (
     <div className='app'>
       <h1>{moment().format('dddd, DD.MM.YYYY')}</h1>
-      <Garbage data={event} />
+      <Garbage data={events} />
       <div className='selection'>
         für
         <DropDown
