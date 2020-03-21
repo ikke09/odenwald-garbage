@@ -5,81 +5,54 @@ import './App.css';
 import Garbage from '../Garbage/Garbage';
 import Footer from '../Footer/Footer';
 import DropDown from '../DropDown/DropDown';
-import { getCityDistricts } from '../../services/CityDistricts.service';
-import { getGarbageEventsOn } from '../../services/Garbage.service';
+import useHttpProxy from '../../hooks/UseHttpProxy';
+import useLocalStorage from '../../hooks/UseLocalStorage';
 
 const App = () => {
-  const [isInitialized, setIsInitialized] = useState(false);
-  const [defaultPreferences, setDefaultPreferences] = useState({
+  const API_URL = `http://${process.env.REACT_APP_APIDOMAIN || 'localhost:3000'}/api`;
+  const DAY = moment().format('DD-MM');
+
+  const [{ data: cityDistricts, isLoading: isCityDistrictsLoading, hasError: hasCityDistrictsErrors }] = useHttpProxy(
+    `${API_URL}/cityDistricts`,
+    {}
+  );
+  const [userContext, setUserContext] = useLocalStorage(process.env.REACT_APP_LOCALSTORAGE_KEY, {
     city: process.env.REACT_APP_DEFAULTCITY,
     district: process.env.REACT_APP_DEFAULTDISTRICT
   });
-  const [cityDistricts, setCityDistricts] = useState(null);
-  const [currentCity, setCurrentCity] = useState(null);
-  const [currentDistrict, setCurrentDistrict] = useState(null);
-  const [events, setEvents] = useState(null);
+  const [
+    { data: garbageEvents, isLoading: isGarbageEventsLoading, hasError: hasGarbageEventsErrors },
+    fetchGarbageEvents
+  ] = useHttpProxy(`${API_URL}/garbages/${userContext.city}/${userContext.district}/${DAY}`, []);
+  const [isInitialized, setIsInitialized] = useState(false);
 
   useEffect(() => {
-    const fetchData = async () => {
-      console.log('fetching cityDistricts data');
-      const data = await getCityDistricts();
-      setCityDistricts(data);
-    };
-
-    fetchData();
-  }, []);
-
-  useEffect(() => {
-    const storageData = localStorage.getItem(process.env.REACT_APP_LOCALSTORAGE_KEY);
-    if (storageData) {
-      const defaults = JSON.parse(storageData);
-      console.log('locale settings loaded', defaults);
-      setDefaultPreferences(defaults);
-      setCurrentCity(defaults.city);
-      setCurrentDistrict(defaults.district);
-    }
-  }, []);
-
-  useEffect(() => {
-    const fetchEventData = async () => {
-      const day = moment().format('DD-MM');
-      console.log('fetching event data for', { currentCity, currentDistrict, day });
-      const data = await getGarbageEventsOn(currentCity, currentDistrict, day);
-      setEvents(data);
-    };
-    if (currentCity && currentDistrict) {
-      fetchEventData();
-    }
-  }, [currentDistrict, currentCity]);
-
-  useEffect(() => {
-    setIsInitialized(!!cityDistricts && !!defaultPreferences && !!events);
-  }, [cityDistricts, events]);
-
-  useEffect(() => {
-    console.log('Updating preferences');
-    const preferences = {
-      city: currentCity,
-      district: currentDistrict
-    };
-    const key = process.env.REACT_APP_LOCALSTORAGE_KEY;
-    localStorage.setItem(key, JSON.stringify(preferences));
-  }, [currentCity, currentDistrict]);
+    const isInit = !!userContext && !isGarbageEventsLoading && !isCityDistrictsLoading;
+    console.log('Check if initialized', isInit);
+    setIsInitialized(isInit);
+  }, [isCityDistrictsLoading, isGarbageEventsLoading, userContext]);
 
   const handleCityChange = (newCity) => {
     console.log('city changed', newCity);
-    setCurrentCity(newCity);
-    console.log('districts of new city', cityDistricts[newCity]);
     const districtsOfNewCity = cityDistricts[newCity];
-    const districtAvailable = !!districtsOfNewCity.find((district) => district === currentDistrict);
-    if (!districtAvailable) {
-      setCurrentDistrict(districtsOfNewCity[0]);
-    }
+    console.log('districts of new city', districtsOfNewCity);
+    const districtAvailable = !!districtsOfNewCity.find((district) => district === userContext.district);
+    const newDistrict = districtAvailable ? userContext.district : districtsOfNewCity[0];
+    setUserContext({
+      ...userContext,
+      city: newCity,
+      district: newDistrict
+    });
+    fetchGarbageEvents(`${API_URL}/garbages/${newCity}/${newDistrict}/${DAY}`);
   };
 
   const handleDistrictChange = (newDistrict) => {
     console.log('district changed', newDistrict);
-    setCurrentDistrict(newDistrict);
+    setUserContext({
+      ...userContext,
+      district: newDistrict
+    });
+    fetchGarbageEvents(`${API_URL}/garbages/${userContext.city}/${newDistrict}/${DAY}`);
   };
 
   if (!isInitialized) {
@@ -101,21 +74,19 @@ const App = () => {
   return (
     <div className='app'>
       <h1>{moment().format('dddd, DD.MM.YYYY')}</h1>
-      <Garbage data={events} />
+      <Garbage data={garbageEvents} />
       <div className='selection'>
         für
         <DropDown
           name='city'
-          value={currentCity}
-          default={defaultPreferences.city}
-          options={cityDistricts ? Object.keys(cityDistricts) : []}
+          value={userContext.city}
+          options={Object.keys(cityDistricts)}
           onChange={handleCityChange}
         />
         <DropDown
           name='district'
-          value={currentDistrict}
-          default={defaultPreferences.district}
-          options={cityDistricts ? cityDistricts[currentCity] : []}
+          value={userContext.district}
+          options={cityDistricts[userContext.city]}
           onChange={handleDistrictChange}
         />
       </div>
