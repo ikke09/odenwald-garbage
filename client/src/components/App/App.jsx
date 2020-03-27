@@ -1,12 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { CircularProgress, Fade } from '@material-ui/core';
 import moment from 'moment';
-import './App.css';
 import Garbage from '../Garbage/Garbage';
 import Footer from '../Footer/Footer';
 import DropDown from '../DropDown/DropDown';
 import useHttpProxy from '../../hooks/UseHttpProxy';
 import useLocalStorage from '../../hooks/UseLocalStorage';
+
+const Header = styled.h1`
+  font-size: 1.5em;
+  text-align: center;
+  color: palevioletred;
+`;
 
 const App = () => {
   const API_URL = `http://${process.env.REACT_APP_APIDOMAIN || 'localhost:3000'}/api`;

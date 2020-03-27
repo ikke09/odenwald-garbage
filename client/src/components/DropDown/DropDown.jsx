@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Select, MenuItem } from '@material-ui/core';
-import './DropDown.css';
 
 const DropDown = ({ name, value, options, onChange }) => {
   const handleChange = (event) => {

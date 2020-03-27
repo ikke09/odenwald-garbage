@@ -1,5 +1,4 @@
 import React from 'react';
-import './Garbage.css';
 
 const Garbage = (props) => {
   console.log('Render Garbage', props);
