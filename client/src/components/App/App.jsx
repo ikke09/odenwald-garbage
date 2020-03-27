@@ -12,18 +12,15 @@ const App = () => {
   const API_URL = `http://${process.env.REACT_APP_APIDOMAIN || 'localhost:3000'}/api`;
   const DAY = moment().format('DD-MM');
 
-  const [{ data: cityDistricts, isLoading: isCityDistrictsLoading, hasError: hasCityDistrictsErrors }] = useHttpProxy(
-    `${API_URL}/cityDistricts`,
-    {}
-  );
+  const [{ data: cityDistricts, isLoading: isCityDistrictsLoading }] = useHttpProxy(`${API_URL}/cityDistricts`, {});
   const [userContext, setUserContext] = useLocalStorage(process.env.REACT_APP_LOCALSTORAGE_KEY, {
     city: process.env.REACT_APP_DEFAULTCITY,
     district: process.env.REACT_APP_DEFAULTDISTRICT
   });
-  const [
-    { data: garbageEvents, isLoading: isGarbageEventsLoading, hasError: hasGarbageEventsErrors },
-    fetchGarbageEvents
-  ] = useHttpProxy(`${API_URL}/garbages/${userContext.city}/${userContext.district}/${DAY}`, []);
+  const [{ data: garbageEvents, isLoading: isGarbageEventsLoading }, fetchGarbageEvents] = useHttpProxy(
+    `${API_URL}/garbages/${userContext.city}/${userContext.district}/${DAY}`,
+    []
+  );
   const [isInitialized, setIsInitialized] = useState(false);
 
   useEffect(() => {
