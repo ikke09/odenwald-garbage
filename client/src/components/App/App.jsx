@@ -1,17 +1,24 @@
 import React, { useState, useEffect } from 'react';
-import { CircularProgress, Fade } from '@material-ui/core';
+import { CircularProgress, Zoom, Grid } from '@material-ui/core';
+import { styled } from '@material-ui/core/styles';
 import moment from 'moment';
 import Garbage from '../Garbage/Garbage';
+import Header from '../Header/Header';
 import Footer from '../Footer/Footer';
-import DropDown from '../DropDown/DropDown';
+import AreaSelection from '../AreaSelection/AreaSelection';
 import useHttpProxy from '../../hooks/UseHttpProxy';
 import useLocalStorage from '../../hooks/UseLocalStorage';
 
-const Header = styled.h1`
-  font-size: 1.5em;
-  text-align: center;
-  color: palevioletred;
-`;
+const ContentContainer = styled(Grid)({
+  height: '100%',
+  'flex-direction': 'column',
+  justifyContent: 'center',
+  alignItems: 'center'
+});
+
+const LoadingBar = styled(CircularProgress)({
+  color: '#28587b'
+});
 
 const App = () => {
   const API_URL = `http://${process.env.REACT_APP_APIDOMAIN || 'localhost:3000'}/api`;
@@ -59,41 +66,32 @@ const App = () => {
 
   if (!isInitialized) {
     return (
-      <div className='app'>
-        Loading...
-        <Fade
+      <ContentContainer container item xs={8}>
+        <Zoom
           in={!isInitialized}
           style={{
             transitionDelay: !isInitialized ? '800ms' : '0ms'
           }}
           unmountOnExit>
-          <CircularProgress />
-        </Fade>
-      </div>
+          <LoadingBar size={64} />
+        </Zoom>
+      </ContentContainer>
     );
   }
 
   return (
-    <div className='app'>
-      <h1>{moment().format('dddd, DD.MM.YYYY')}</h1>
-      <Garbage data={garbageEvents} />
-      <div className='selection'>
-        für
-        <DropDown
-          name='city'
-          value={userContext.city}
-          options={Object.keys(cityDistricts)}
-          onChange={handleCityChange}
-        />
-        <DropDown
-          name='district'
-          value={userContext.district}
-          options={cityDistricts[userContext.city]}
-          onChange={handleDistrictChange}
-        />
-      </div>
+    <ContentContainer container item xs={8} spacing={10}>
+      <Header />
+      <Garbage garbages={garbageEvents} />
+      <AreaSelection
+        city={userContext.city}
+        district={userContext.district}
+        cities={Object.keys(cityDistricts)}
+        districts={cityDistricts[userContext.city]}
+        handleCityChange={handleCityChange}
+        handleDistrictChange={handleDistrictChange}></AreaSelection>
       <Footer />
-    </div>
+    </ContentContainer>
   );
 };
 
