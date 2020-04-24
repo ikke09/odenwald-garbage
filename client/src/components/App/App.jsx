@@ -13,11 +13,11 @@ const ContentContainer = styled(Grid)({
   height: '100%',
   'flex-direction': 'column',
   justifyContent: 'center',
-  alignItems: 'center'
+  alignItems: 'center',
 });
 
 const LoadingBar = styled(CircularProgress)({
-  color: '#28587b'
+  color: '#28587b',
 });
 
 const App = () => {
@@ -27,7 +27,7 @@ const App = () => {
   const [{ data: cityDistricts, isLoading: isCityDistrictsLoading }] = useHttpProxy(`${API_URL}/cityDistricts`, {});
   const [userContext, setUserContext] = useLocalStorage(process.env.REACT_APP_LOCALSTORAGE_KEY, {
     city: process.env.REACT_APP_DEFAULTCITY,
-    district: process.env.REACT_APP_DEFAULTDISTRICT
+    district: process.env.REACT_APP_DEFAULTDISTRICT,
   });
   const [{ data: garbageEvents, isLoading: isGarbageEventsLoading }, fetchGarbageEvents] = useHttpProxy(
     `${API_URL}/garbages/${userContext.city}/${userContext.district}/${DAY}`,
@@ -50,7 +50,7 @@ const App = () => {
     setUserContext({
       ...userContext,
       city: newCity,
-      district: newDistrict
+      district: newDistrict,
     });
     fetchGarbageEvents(`${API_URL}/garbages/${newCity}/${newDistrict}/${DAY}`);
   };
@@ -59,7 +59,7 @@ const App = () => {
     console.log('district changed', newDistrict);
     setUserContext({
       ...userContext,
-      district: newDistrict
+      district: newDistrict,
     });
     fetchGarbageEvents(`${API_URL}/garbages/${userContext.city}/${newDistrict}/${DAY}`);
   };
@@ -70,7 +70,7 @@ const App = () => {
         <Zoom
           in={!isInitialized}
           style={{
-            transitionDelay: !isInitialized ? '800ms' : '0ms'
+            transitionDelay: !isInitialized ? '800ms' : '0ms',
           }}
           unmountOnExit>
           <LoadingBar size={64} />
