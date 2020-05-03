@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { styled } from '@material-ui/core/styles';
-import { Card, CardContent, Grid, Divider, Box } from '@material-ui/core';
+import { Grid } from '@material-ui/core';
+import GarbageItem from './Garbage-Item';
 
 const GarbageContainer = styled(Grid)({
   width: '100%',
@@ -10,47 +11,15 @@ const GarbageContainer = styled(Grid)({
   alignItems: 'center',
 });
 
-const GarbageCard = styled(Card)({
-  borderRadius: 12,
-  minWidth: 256,
-  minHeight: 128,
-  textAlign: 'center',
-});
-
-const GarbageCardHeader = styled('h3')({
-  fontSize: 18,
-  fontWeight: 'bold',
-  letterSpacing: '0.5px',
-  marginTop: 4,
-  marginBottom: 4,
-});
-
-const GarbageCardContentBox = styled('div')({
-  backgroundColor: (props) => props.bg,
-});
-
 const Garbage = ({ garbages }) => {
-  console.log('Render Garbage', garbages);
-  if (!garbages || garbages.length === 0) {
-    return (
-      <GarbageContainer container>
-        <span>Keine Müllabholung</span>
-      </GarbageContainer>
-    );
-  }
+  console.log('Render Garbages', garbages);
   return (
     <GarbageContainer container spacing={3}>
-      {garbages.map((garbage) => (
-        <Grid key={garbage.garbageBin.shortName} item>
-          <GarbageCard variant='outlined'>
-            <CardContent>
-              <GarbageCardHeader>{garbage.garbageBin.fullName}</GarbageCardHeader>
-              <Divider light />
-              <GarbageCardContentBox bg={garbage.garbageBin.color}></GarbageCardContentBox>
-            </CardContent>
-          </GarbageCard>
-        </Grid>
-      ))}
+      {garbages && garbages.length ? (
+        garbages.map((g) => <GarbageItem key={g.garbageBin.shortName} garbage={g} />)
+      ) : (
+        <GarbageItem />
+      )}
     </GarbageContainer>
   );
 };
