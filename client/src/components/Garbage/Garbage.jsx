@@ -1,17 +1,39 @@
 import React from 'react';
-import './Garbage.css';
+import PropTypes from 'prop-types';
+import { styled } from '@material-ui/core/styles';
+import { Grid } from '@material-ui/core';
+import GarbageItem from './Garbage-Item';
 
-const Garbage = (props) => {
-  console.log('Render Garbage', props);
-  if (!props.data) return null;
-  const garbages = props.data;
+const GarbageContainer = styled(Grid)({
+  width: '100%',
+  'flex-direction': 'row',
+  justifyContent: 'center',
+  alignItems: 'center',
+});
+
+const Garbage = ({ garbages }) => {
+  console.log('Render Garbages', garbages);
   return (
-    <div>
-      {garbages.map((g) => (
-        <p key={g.garbageBin.shortName}>{g.garbageBin.fullName}</p>
-      ))}
-    </div>
+    <GarbageContainer container spacing={3}>
+      {garbages && garbages.length ? (
+        garbages.map((g) => <GarbageItem key={g.garbageBin.shortName} garbage={g} />)
+      ) : (
+        <GarbageItem />
+      )}
+    </GarbageContainer>
   );
+};
+
+Garbage.propTypes = {
+  garbages: PropTypes.arrayOf(
+    PropTypes.shape({
+      garbageBin: PropTypes.shape({
+        shortName: PropTypes.string.isRequired,
+        fullName: PropTypes.string.isRequired,
+        color: PropTypes.string.isRequired,
+      }).isRequired,
+    }).isRequired
+  ).isRequired,
 };
 
 export default Garbage;
