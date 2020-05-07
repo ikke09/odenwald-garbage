@@ -20,10 +20,12 @@
     "node-fetch": "^2.6.0"
   },
   "scripts": {
-    "dev": "SET NODE_ENV=debug && nodemon ./functions/bin/www && npm start",
+    "dev": "SET NODE_ENV=debug && nodemon ./functions/index.js && npm start",
+
     "start": "react-scripts start",
     "build": "react-scripts build",
     "eject": "react-scripts eject",
+
     "test": "npm run test:service && npm run test:client",
     "test:service": "jest",
     "test:client": "react-scripts test"
