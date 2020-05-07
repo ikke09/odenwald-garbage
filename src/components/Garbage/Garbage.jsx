@@ -11,18 +11,15 @@ const GarbageContainer = styled(Grid)({
   alignItems: 'center',
 });
 
-const Garbage = ({ garbages }) => {
-  console.log('Render Garbages', garbages);
-  return (
-    <GarbageContainer container spacing={3}>
-      {garbages && garbages.length ? (
-        garbages.map((g) => <GarbageItem key={g.garbageBin.shortName} garbage={g} />)
-      ) : (
-        <GarbageItem />
-      )}
-    </GarbageContainer>
-  );
-};
+const Garbage = ({ garbages }) => (
+  <GarbageContainer container spacing={3}>
+    {garbages && garbages.length ? (
+      garbages.map((g) => <GarbageItem key={g.garbageBin.shortName} garbage={g} />)
+    ) : (
+      <GarbageItem />
+    )}
+  </GarbageContainer>
+);
 
 Garbage.propTypes = {
   garbages: PropTypes.arrayOf(
@@ -32,7 +29,7 @@ Garbage.propTypes = {
         fullName: PropTypes.string.isRequired,
         color: PropTypes.string.isRequired,
       }).isRequired,
-    }).isRequired
+    }).isRequired,
   ).isRequired,
 };
 

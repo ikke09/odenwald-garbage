@@ -13,7 +13,7 @@ const AppWrapper = styled(Grid)({
   margin: 0,
   padding: 0,
   alignItems: 'center',
-  justifyContent: 'center'
+  justifyContent: 'center',
 });
 
 moment.locale('de');
@@ -21,5 +21,5 @@ ReactDOM.render(
   <AppWrapper container>
     <App />
   </AppWrapper>,
-  document.getElementById('root')
+  document.getElementById('root'),
 );

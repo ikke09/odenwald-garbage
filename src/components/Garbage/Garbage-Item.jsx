@@ -1,7 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { styled } from '@material-ui/core/styles';
-import { Card, CardContent, Grid, Box } from '@material-ui/core';
+import {
+  Card,
+  CardContent,
+  Grid,
+  Box,
+} from '@material-ui/core';
 
 const GarbageCard = styled(Card)({
   borderRadius: 12,
@@ -24,18 +29,20 @@ const GarbageCardContent = styled(Box)({
   alignItems: 'center',
 });
 
-const GarbageItem = ({ garbage }) => {
-  return (
-    <Grid item>
-      <GarbageCard variant='outlined' bg={garbage ? garbage.garbageBin.color : '#ffb86f'}>
-        <CardContent>
-          <GarbageCardContent>
-            <span>{garbage ? garbage.garbageBin.fullName : 'Keine Müllabholung'}</span>
-          </GarbageCardContent>
-        </CardContent>
-      </GarbageCard>
-    </Grid>
-  );
+const GarbageItem = ({ garbage }) => (
+  <Grid item>
+    <GarbageCard variant="outlined" bg={garbage ? garbage.garbageBin.color : '#ffb86f'}>
+      <CardContent>
+        <GarbageCardContent>
+          <span>{garbage ? garbage.garbageBin.fullName : 'Keine Müllabholung'}</span>
+        </GarbageCardContent>
+      </CardContent>
+    </GarbageCard>
+  </Grid>
+);
+
+GarbageItem.defaultProps = {
+  garbage: null,
 };
 
 GarbageItem.propTypes = {

@@ -11,18 +11,23 @@ const AreaSelectionWrapper = styled(Grid)({
   alignItems: 'center',
 });
 
-const AreaSelection = ({ city, district, cities, districts, handleCityChange, handleDistrictChange }) => {
-  return (
-    <AreaSelectionWrapper container item spacing={2}>
-      <Grid item>
-        <DropDown name='Stadt' value={city} options={cities} onChange={handleCityChange} />
-      </Grid>
-      <Grid item>
-        <DropDown name='Stadtteil' value={district} options={districts} onChange={handleDistrictChange} />
-      </Grid>
-    </AreaSelectionWrapper>
-  );
-};
+const AreaSelection = ({
+  city,
+  district,
+  cities,
+  districts,
+  handleCityChange,
+  handleDistrictChange,
+}) => (
+  <AreaSelectionWrapper container item spacing={2}>
+    <Grid item>
+      <DropDown name="Stadt" value={city} options={cities} onChange={handleCityChange} />
+    </Grid>
+    <Grid item>
+      <DropDown name="Stadtteil" value={district} options={districts} onChange={handleDistrictChange} />
+    </Grid>
+  </AreaSelectionWrapper>
+);
 
 AreaSelection.propTypes = {
   city: PropTypes.string.isRequired,

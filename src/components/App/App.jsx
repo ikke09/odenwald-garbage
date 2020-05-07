@@ -29,23 +29,25 @@ const App = () => {
     city: process.env.REACT_APP_DEFAULTCITY,
     district: process.env.REACT_APP_DEFAULTDISTRICT,
   });
-  const [{ data: garbageEvents, isLoading: isGarbageEventsLoading }, fetchGarbageEvents] = useHttpProxy(
+  const [
+    { data: garbageEvents, isLoading: isGarbageEventsLoading },
+    fetchGarbageEvents,
+  ] = useHttpProxy(
     `${API_URL}/garbages/${userContext.city}/${userContext.district}/${DAY}`,
-    []
+    [],
   );
   const [isInitialized, setIsInitialized] = useState(false);
 
   useEffect(() => {
     const isInit = !!userContext && !isGarbageEventsLoading && !isCityDistrictsLoading;
-    console.log('Check if initialized', isInit);
     setIsInitialized(isInit);
   }, [isCityDistrictsLoading, isGarbageEventsLoading, userContext]);
 
   const handleCityChange = (newCity) => {
-    console.log('city changed', newCity);
     const districtsOfNewCity = cityDistricts[newCity];
-    console.log('districts of new city', districtsOfNewCity);
-    const districtAvailable = !!districtsOfNewCity.find((district) => district === userContext.district);
+    const districtAvailable = !!districtsOfNewCity.find(
+      (district) => district === userContext.district,
+    );
     const newDistrict = districtAvailable ? userContext.district : districtsOfNewCity[0];
     setUserContext({
       ...userContext,
@@ -56,7 +58,6 @@ const App = () => {
   };
 
   const handleDistrictChange = (newDistrict) => {
-    console.log('district changed', newDistrict);
     setUserContext({
       ...userContext,
       district: newDistrict,
@@ -72,7 +73,8 @@ const App = () => {
           style={{
             transitionDelay: !isInitialized ? '800ms' : '0ms',
           }}
-          unmountOnExit>
+          unmountOnExit
+        >
           <LoadingBar size={64} />
         </Zoom>
       </ContentContainer>
@@ -89,7 +91,8 @@ const App = () => {
         cities={Object.keys(cityDistricts)}
         districts={cityDistricts[userContext.city]}
         handleCityChange={handleCityChange}
-        handleDistrictChange={handleDistrictChange}></AreaSelection>
+        handleDistrictChange={handleDistrictChange}
+      />
       <Footer />
     </ContentContainer>
   );

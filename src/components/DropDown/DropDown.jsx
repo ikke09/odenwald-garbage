@@ -1,14 +1,23 @@
+/* eslint-disable react/no-array-index-key */
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Select, MenuItem, InputLabel, FormControl } from '@material-ui/core';
+import {
+  Select,
+  MenuItem,
+  InputLabel,
+  FormControl,
+} from '@material-ui/core';
 
-const DropDown = ({ name, value, options, onChange }) => {
+const DropDown = ({
+  name,
+  value,
+  options,
+  onChange,
+}) => {
   const handleChange = (event) => {
-    const { value } = event.target;
-    onChange(value);
+    const { value: target } = event.target;
+    onChange(target);
   };
-
-  console.log('Rendering DropDown', name);
 
   return (
     <FormControl>
@@ -22,6 +31,10 @@ const DropDown = ({ name, value, options, onChange }) => {
       </Select>
     </FormControl>
   );
+};
+
+DropDown.defaultProps = {
+  value: process.env.REACT_APP_DEFAULTCITY,
 };
 
 DropDown.propTypes = {

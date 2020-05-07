@@ -4,7 +4,6 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const cors = require('cors');
 const helmet = require('helmet');
-require('dotenv').config();
 
 const indexRouter = require('./routes/index.route');
 const cityDistrictsRouter = require('./routes/city-districts.route');

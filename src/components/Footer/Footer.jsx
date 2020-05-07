@@ -9,19 +9,20 @@ const FooterWrapper = styled('span')({
   'text-align': 'center',
 });
 
-const Footer = () => {
-  return (
-    <FooterWrapper>
-      Erstellt mit Leidenschaft von{' '}
-      <a href='https://christian-bechtluft.jimdosite.com/' target='_blank' rel='noopener noreferrer'>
+const Footer = () => (
+  <FooterWrapper>
+      Erstellt mit Leidenschaft von
+    {' '}
+    <a href="https://christian-bechtluft.jimdosite.com/" target="_blank" rel="noopener noreferrer">
         Christian Bechtluft
-      </a>{' '}
-      - Quellcode auf{' '}
-      <a href='https://github.com/ikke09/odenwald-garbage' target='_blank' rel='noopener noreferrer'>
+    </a>
+    {' '}
+      - Quellcode auf
+    {' '}
+    <a href="https://github.com/ikke09/odenwald-garbage" target="_blank" rel="noopener noreferrer">
         GitHub
-      </a>
-    </FooterWrapper>
-  );
-};
+    </a>
+  </FooterWrapper>
+);
 
 export default Footer;

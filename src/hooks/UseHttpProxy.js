@@ -8,7 +8,6 @@ const useHttpProxy = (initialUrl, initialData = null) => {
 
   useEffect(() => {
     const fetchData = async () => {
-      console.log(`fetching data from ${url}`);
       setHasError(false);
       try {
         const res = await fetch(url);

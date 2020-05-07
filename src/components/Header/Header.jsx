@@ -8,7 +8,6 @@ const HeaderWrapper = styled(Grid)({
   'flex-direction': 'row',
   justifyContent: 'center',
   alignItems: 'center',
-  // padding: '0 !important',
 });
 
 const HeaderContent = styled('h1')({
