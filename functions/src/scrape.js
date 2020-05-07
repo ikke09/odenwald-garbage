@@ -1,6 +1,6 @@
 const fetch = require('node-fetch');
 const cheerio = require('cheerio');
-const moment = require('./routes/node_modules/moment');
+const moment = require('moment');
 const EventDay = require('./models/event-day');
 const allPossibleGarbageBins = require('./constants/garbage-bins');
 
