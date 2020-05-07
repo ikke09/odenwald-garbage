@@ -27,20 +27,11 @@
     "eject": "react-scripts eject",
 
     "test": "npm run test:service && npm run test:client",
-    "test:service": "jest",
-    "test:client": "react-scripts test"
+    "test:service": "jest --config jest.config.json",
+    "test:client": "react-scripts test --watchAll=false"
   },
   "eslintConfig": {
     "extends": "react-app"
-  },
-  "jest": {
-    "displayName": {
-      "name": "SERVICE",
-      "color": "blue"
-    },
-    "testMatch": [ "**/__tests__/**/*.[jt]s?(x)", "**/?(*.)+(test).[jt]s?(x)" ],
-    "testPathIgnorePatterns": ["./node_modules", "./public"],
-    "watchman": false
   },
   "browserslist": {
     "production": [
