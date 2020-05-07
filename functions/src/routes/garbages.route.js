@@ -1,12 +1,12 @@
 const express = require('express');
-const scraper = require('../src/scrape');
+const scraper = require('../scrape');
 const moment = require('moment');
 
 const router = express.Router();
 
 const loadData = async (city, district) => await scraper.scrape(city, district, moment().year());
 
-router.get('/:city/:district', async function(req, res, next) {
+router.get('/:city/:district', async function (req, res, next) {
   try {
     const { city, district } = req.params;
     if (!city || !district) {
@@ -19,7 +19,7 @@ router.get('/:city/:district', async function(req, res, next) {
   }
 });
 
-router.get('/:city/:district/:day', async function(req, res, next) {
+router.get('/:city/:district/:day', async function (req, res, next) {
   try {
     const { city, district, day } = req.params;
     if (!city || !district || !day) {

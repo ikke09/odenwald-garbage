@@ -1,6 +1,6 @@
 const request = require('supertest');
 const app = require('../app');
-const cityDistricts = require('../src/constants/city-districts');
+const cityDistricts = require('../constants/city-districts');
 
 describe('City-District Route', () => {
   it('/api/citydistricts should return all cities with their districts', (done) => {

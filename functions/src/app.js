@@ -4,7 +4,7 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const cors = require('cors');
 const helmet = require('helmet');
-const config = require('dotenv').config();
+require('dotenv').config();
 
 const indexRouter = require('./routes/index.route');
 const cityDistrictsRouter = require('./routes/city-districts.route');
@@ -15,8 +15,8 @@ const app = express();
 app.use(
   cors({
     origin: `${process.env.CLIENTORIGIN}`,
-    optionsSuccessStatus: 200
-  })
+    optionsSuccessStatus: 200,
+  }),
 );
 app.use(logger('dev'));
 app.use(express.json());
@@ -30,16 +30,17 @@ app.use('/api', indexRouter);
 app.use('/api/citydistricts', cityDistrictsRouter);
 app.use('/api/garbages', garbageRouter);
 
-app.use(function(req, res, next) {
+app.use((req, res, next) => {
   next(createError(404));
 });
 
 // error handler
-app.use(function(err, req, res, next) {
+// eslint-disable-next-line no-unused-vars
+app.use((err, req, res, next) => {
   res.status(err.status || 500);
   res.json({
     message: err.message,
-    error: process.env.DEBUG ? err.stack : {}
+    error: process.env.NODE_ENV === 'production' ? '🥞' : err.stack,
   });
 });
 
