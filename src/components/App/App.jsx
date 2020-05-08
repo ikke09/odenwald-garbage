@@ -21,7 +21,7 @@ const LoadingBar = styled(CircularProgress)({
 });
 
 const App = () => {
-  const API_URL = `http://${process.env.REACT_APP_APIDOMAIN || 'localhost:3000'}/api`;
+  const API_URL = `${process.env.REACT_APP_APIDOMAIN || 'localhost:3000'}/api`;
   const DAY = moment().format('DD-MM');
 
   const [{ data: cityDistricts, isLoading: isCityDistrictsLoading }] = useHttpProxy(`${API_URL}/cityDistricts`, {});

@@ -10,10 +10,9 @@ const cityDistrictsRouter = require('./routes/city-districts.route');
 const garbageRouter = require('./routes/garbages.route');
 
 const app = express();
-
 app.use(
   cors({
-    origin: `${process.env.CLIENTORIGIN}`,
+    origin: `${process.env.CLIENT_ORIGIN}`,
     optionsSuccessStatus: 200,
   }),
 );
