@@ -10,13 +10,17 @@ const cityDistrictsRouter = require('./routes/city-districts.route');
 const garbageRouter = require('./routes/garbages.route');
 
 const app = express();
-app.use(
-  cors({
-    origin: `${process.env.CLIENT_ORIGIN}`,
-    optionsSuccessStatus: 200,
-  }),
-);
-app.use(logger('dev'));
+const isProduction = process.env.NODE_ENV === 'production';
+
+if (!isProduction) {
+  app.use(
+    cors({
+      origin: `${process.env.URL}`,
+      optionsSuccessStatus: 200,
+    }),
+  );
+}
+app.use(logger(isProduction ? 'common' : 'dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
@@ -38,7 +42,7 @@ app.use((err, req, res, next) => {
   res.status(err.status || 500);
   res.json({
     message: err.message,
-    error: process.env.NODE_ENV === 'production' ? '🥞' : err.stack,
+    error: isProduction ? '🥞' : err.stack,
   });
 });
 

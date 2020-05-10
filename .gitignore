@@ -32,5 +32,4 @@
 
 **.DS_Store
 
-**.env
-!*.en.template
+.env*.local

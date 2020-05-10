@@ -33,13 +33,9 @@ const DropDown = ({
   );
 };
 
-DropDown.defaultProps = {
-  value: process.env.REACT_APP_DEFAULTCITY,
-};
-
 DropDown.propTypes = {
   name: PropTypes.string.isRequired,
-  value: PropTypes.string,
+  value: PropTypes.string.isRequired,
   options: PropTypes.arrayOf(PropTypes.string).isRequired,
   onChange: PropTypes.func.isRequired,
 };

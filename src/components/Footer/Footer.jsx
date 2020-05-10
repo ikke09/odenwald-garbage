@@ -13,13 +13,13 @@ const Footer = () => (
   <FooterWrapper>
       Erstellt mit Leidenschaft von
     {' '}
-    <a href="https://christian-bechtluft.jimdosite.com/" target="_blank" rel="noopener noreferrer">
+    <a href={process.env.REACT_APP_WEBSITE_URL} target="_blank" rel="noopener noreferrer">
         Christian Bechtluft
     </a>
     {' '}
       - Quellcode auf
     {' '}
-    <a href="https://github.com/ikke09/odenwald-garbage" target="_blank" rel="noopener noreferrer">
+    <a href={process.env.REACT_APP_REPOSITORY_URL} target="_blank" rel="noopener noreferrer">
         GitHub
     </a>
   </FooterWrapper>

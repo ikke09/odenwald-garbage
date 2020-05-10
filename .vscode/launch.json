@@ -21,11 +21,11 @@
       "name": "Debug Service",
       "request": "launch",
       "args": ["--debug"],
-      "cwd": "${workspaceFolder}/service",
+      "cwd": "${workspaceFolder}/functions",
       "console": "externalTerminal",
       "internalConsoleOptions": "neverOpen",
       "disableOptimisticBPs": true,
-      "program": "${workspaceFolder}/service/bin/www"
+      "program": "${workspaceFolder}/functions/index.js"
     },
     {
       "name": "Debug Client",
