@@ -27,11 +27,7 @@ app.use(cookieParser());
 app.use(helmet());
 app.disable('x-powered-by');
 
-app.get('/', function (req, res, next) {
-  res.json({
-    version: '1.0.0.0'
-  });
-});
+app.use('/', indexRouter);
 app.use('/api', indexRouter);
 app.use('/api/citydistricts', cityDistrictsRouter);
 app.use('/api/garbages', garbageRouter);
