@@ -11,6 +11,7 @@ const garbageRouter = require('./routes/garbages.route');
 
 const app = express();
 const isProduction = process.env.NODE_ENV === 'production';
+const baseRoute = '/.netlify/functions/api';
 
 if (!isProduction) {
   app.use(
@@ -27,10 +28,9 @@ app.use(cookieParser());
 app.use(helmet());
 app.disable('x-powered-by');
 
-app.use('/', indexRouter);
-app.use('/api', indexRouter);
-app.use('/api/citydistricts', cityDistrictsRouter);
-app.use('/api/garbages', garbageRouter);
+app.use(`${baseRoute}`, indexRouter);
+app.use(`${baseRoute}/citydistricts`, cityDistrictsRouter);
+app.use(`${baseRoute}/garbages`, garbageRouter);
 
 app.use((req, res, next) => {
   next(createError(404));

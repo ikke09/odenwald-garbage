@@ -24,6 +24,7 @@
 
 # Compiled binary addons (http://nodejs.org/api/addons.html)
 **/build
+**/service
 
 # Debug log from npm
 **npm-debug.log
