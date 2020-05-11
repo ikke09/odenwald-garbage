@@ -1,0 +1,14 @@
+{
+  "name": "garbages",
+  "version": "0.1.0",
+  "private": true,
+  "main": "garbages.js",
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.3",
+    "moment": "^2.24.0",
+    "node-fetch": "^2.6.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}

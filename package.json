@@ -4,28 +4,21 @@
   "private": true,
   "dependencies": {
     "@material-ui/core": "^4.9.5",
-    "cheerio": "^1.0.0-rc.3",
-    "cookie-parser": "~1.4.4",
-    "cors": "^2.8.5",
-    "debug": "~2.6.9",
     "dotenv": "^8.2.0",
     "dotenv-expand": "^5.1.0",
-    "express": "~4.16.1",
-    "helmet": "^3.21.2",
-    "http-errors": "~1.6.3",
     "moment": "^2.24.0",
-    "morgan": "~1.9.1",
     "node-fetch": "^2.6.0",
     "prop-types": "^15.7.2",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
     "react-scripts": "^3.4.0",
-    "serverless-http": "^2.3.2"
+    "netlify-lambda": "^1.6.3"
   },
   "scripts": {
     "start": "run-p start:**",
     "start:app": "react-scripts start",
     "start:service": "netlify-lambda serve functions",
+    "prebuild": "netlify-lambda install functions",
     "build": "run-p build:**",
     "build:app": "react-scripts build",
     "build:service": "netlify-lambda build functions",
@@ -59,10 +52,7 @@
     "eslint-plugin-import": "^2.18.2",
     "http-proxy-middleware": "^1.0.3",
     "jest": "24.9.0",
-    "netlify-lambda": "^1.6.3",
-    "nodemon": "^2.0.2",
     "npm-run-all": "^4.1.5",
-    "react-test-renderer": "^16.12.0",
-    "supertest": "^4.0.2"
+    "react-test-renderer": "^16.12.0"
   }
 }

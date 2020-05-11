@@ -1,4 +1,4 @@
-const GarbageBin = require('../models/garbage-bin');
+const GarbageBin = require('./garbagebin');
 
 const allPossibleGarbageBins = [
   new GarbageBin('Rest', 'Restmüll', '#d4d9dd'),

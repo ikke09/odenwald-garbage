@@ -24,7 +24,7 @@ const App = () => {
   const API_URL = process.env.REACT_APP_API;
   const DAY = moment().format('DD-MM');
 
-  const [{ data: cityDistricts, isLoading: isCityDistrictsLoading }] = useHttpProxy(`${API_URL}/cityDistricts`, {});
+  const [{ data: cityDistricts, isLoading: isCityDistrictsLoading }] = useHttpProxy(`${API_URL}/citydistricts`, {});
   const [userContext, setUserContext] = useLocalStorage(process.env.REACT_APP_LOCALSTORAGE_KEY, {
     city: process.env.REACT_APP_DEFAULT_CITY,
     district: process.env.REACT_APP_DEFAULT_DISTRICT,

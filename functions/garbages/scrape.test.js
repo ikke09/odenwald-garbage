@@ -1,5 +1,5 @@
 const scraper = require('./scrape');
-const garbageBins = require('./constants/garbage-bins');
+const garbageBins = require('./garbagebins');
 
 const mockCalender =
   '<html><table><tbody><tr><th>Januar</th></tr><tr><td>2</td><td>Mo</td><td><div>Rest</div></td><td>3</td><td>Di</td><td></td><td>4</td><td>Mi</td><td><div>Papier + Gelber-Sack</div></td></tr></tbody></table></html>';
