@@ -1,24 +1,34 @@
-const fetch = require('node-fetch');
+const https = require('https');
 const cheerio = require('cheerio');
 const moment = require('moment');
-const EventDay = require('./models/event-day');
-const allPossibleGarbageBins = require('./constants/garbage-bins');
+const EventDay = require('./eventday');
+const allPossibleGarbageBins = require('./garbagebins');
 
 const baseUrl = 'https://www.abfallkalender-odenwald.de/php/Muellkalender.php?pfad=Deutsch.muellkalender';
 
 moment.locale('de');
 
-const scrape = async (city, district, year) => {
-  const htmlContent = await fetchRawHtmlContent(city, district, year);
-  return extractCalenderData(htmlContent);
+const scrape = (city, district, year, callback) => {
+  fetchRawHtmlContent(city, district, year, (html) => {
+    callback(extractCalenderData(html));
+  });
 };
 
-const fetchRawHtmlContent = async (city, district, year) => {
+const fetchRawHtmlContent = (city, district, year, callback) => {
   const url = encodeURI(`${baseUrl}&ort=${city}&ot=${district}&jahr=${year}`);
-  const res = await fetch(url);
-  const rawData = await res.buffer();
-  const data = Buffer.from(rawData);
-  return data.toString('utf8');
+  return https.get(url, (res) => {
+    let data = [];
+    res.on('data', (chunk) => {
+      data.push(chunk);
+    });
+    res.on('end', () => {
+      const rawData = Buffer.concat(data);
+      callback(rawData.toString('utf8'));
+    })
+  }).on('error', (err) => {
+    console.error('Fetching garbage calender from reso failed', err);
+    throw new Error(err);
+  });
 };
 
 const extractCalenderData = (rawHtml, year) => {
