@@ -1,4 +1,4 @@
-{
+const cityDistricts = {
   "Bad-König": [
     "Kernstadt",
     "Etzen-Gesäß",
@@ -106,4 +106,14 @@
     "Unter-Ostern",
     "Vierstöck"
   ]
-}
+};
+
+exports.handler = async function (event, context, callback) {
+  callback(null, {
+    statusCode: 200,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(cityDistricts),
+  });
+};
