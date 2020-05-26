@@ -108,12 +108,12 @@ const cityDistricts = {
   ]
 };
 
-exports.handler = async function (event, context, callback) {
-  callback(null, {
+exports.handler = async function (event, context) {
+  return {
     statusCode: 200,
     headers: {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(cityDistricts),
-  });
+  };
 };

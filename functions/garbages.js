@@ -2,8 +2,9 @@ const scraper = require('./garbages/scrape');
 const moment = require('moment');
 
 function parsePath(path) {
-  const paramsRegex = new RegExp(/\/\.netlify\/functions\/garbages\/(\w+)\/(\w+)\/?(\d+\-\d+)?/, 'sg');
-  const paramsResults = paramsRegex.exec(path);
+  let url = decodeURI(path);
+  const paramsRegex = new RegExp(/\/\.netlify\/functions\/garbages\/([\wä-ü-ß]+)\/([\wä-ü-ß]+)\/?(\d+\-\d+)?/, 'sg');
+  const paramsResults = paramsRegex.exec(url);
   if (!paramsResults) return {};
   const { 1: city, 2: district, 3: day } = paramsResults;
   return { city, district, day };
