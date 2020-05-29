@@ -16,7 +16,7 @@ function parsePath(path) {
   return { city, district, day };
 }
 
-function loadGarbages({ city, district, day = null }, callback) {
+async function loadGarbages({ city, district, day = null }) {
   if (!city || !district) {
     throw new Error('city & district can not be null!');
   }
@@ -25,13 +25,12 @@ function loadGarbages({ city, district, day = null }, callback) {
   const dictionaryKey = `${city}-${district}`;
   if (timeSinceLastFetch <= cache.threshhold && !!cache.garbageDictionary[dictionaryKey]) {
     const data = cache.garbageDictionary[dictionaryKey];
-    callback(filterGarbages(data, day));
+    return filterGarbages(data, day);
   } else {
-    scraper.scrape(city, district, moment().year(), (data) => {
-      cache.garbageDictionary[dictionaryKey] = data;
-      cache.lastFetch = Date.now();
-      callback(filterGarbages(data, day));
-    });
+    const data = await scraper.scrape(city, district, moment().year());
+    cache.garbageDictionary[dictionaryKey] = data;
+    cache.lastFetch = Date.now();
+    return filterGarbages(data, day);
   }
 }
 
@@ -44,19 +43,18 @@ function filterGarbages(data, day) {
   return result;
 }
 
-exports.handler = function (event, context, callback) {
+exports.handler = async function (event, context) {
   try {
-    loadGarbages(parsePath(event.path), (garbages) => {
-      callback(null, {
-        statusCode: 200,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(garbages),
-      });
-    });
+    const garbages = await loadGarbages(parsePath(event.path));
+    return {
+      statusCode: 200,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(garbages),
+    };
   } catch (error) {
-    callback(null, {
+    return {
       statusCode: 500,
       headers: {
         'Content-Type': 'application/json',
@@ -64,7 +62,7 @@ exports.handler = function (event, context, callback) {
       body: JSON.stringify({
         error: 'Could not load garbage data!',
       }),
-    })
+    };
   }
 };
 
