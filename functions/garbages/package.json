@@ -1,6 +1,6 @@
 {
-  "name": "garbages",
-  "version": "0.1.0",
+  "name": "garbages_function",
+  "version": "1.0.0",
   "private": true,
   "main": "garbages.js",
   "dependencies": {
