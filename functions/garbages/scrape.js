@@ -1,4 +1,6 @@
 const fetch = require('node-fetch').default;
+// needed to fix issue https://github.com/netlify/netlify-lambda/issues/201
+const encoding = require('encoding');
 const cheerio = require('cheerio');
 const moment = require('moment');
 const EventDay = require('./eventday');
