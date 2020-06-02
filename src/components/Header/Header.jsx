@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import moment from 'moment';
 
 import { styled } from '@material-ui/core/styles';
@@ -16,18 +17,21 @@ const HeaderContent = styled('h1')({
   margin: '0',
 });
 
-const Header = () => {
-  const momentNow = moment();
+const Header = ({date}) => {
   return (
     <HeaderWrapper container item spacing={3}>
       <Grid item>
-        <HeaderContent>{momentNow.format('dddd,')}</HeaderContent>
+        <HeaderContent>{date.format('dddd,')}</HeaderContent>
       </Grid>
       <Grid item>
-        <HeaderContent>{momentNow.format('DD.MM.YYYY')}</HeaderContent>
+        <HeaderContent>{date.format('DD.MM.YYYY')}</HeaderContent>
       </Grid>
     </HeaderWrapper>
   );
+};
+
+Header.propTypes = {
+  date: PropTypes.instanceOf(moment).isRequired,
 };
 
 export default Header;
