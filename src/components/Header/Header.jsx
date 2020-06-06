@@ -17,7 +17,8 @@ const HeaderContent = styled('h1')({
   margin: '0',
 });
 
-const Header = ({date}) => {
+const Header = ({ day }) => {
+  const date = moment(day, process.env.REACT_APP_DAY_FORMAT);
   return (
     <HeaderWrapper container item spacing={3}>
       <Grid item>
@@ -31,7 +32,7 @@ const Header = ({date}) => {
 };
 
 Header.propTypes = {
-  date: PropTypes.instanceOf(moment).isRequired,
+  day: PropTypes.string.isRequired,
 };
 
 export default Header;

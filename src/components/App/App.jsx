@@ -20,29 +20,45 @@ const LoadingBar = styled(CircularProgress)({
   color: '#28587b',
 });
 
-const App = () => {
-  const API_URL = process.env.REACT_APP_API;
-  const DAY_FORMAT = process.env.REACT_APP_DAY_FORMAT;
+const API_URL = process.env.REACT_APP_API;
+const DAY_FORMAT = process.env.REACT_APP_DAY_FORMAT;
 
-  const [selectedDate, setSelectedDate] = useState(moment());
-  const getFormattedDay = () => selectedDate.format(DAY_FORMAT);
+const App = () => {
+  const now = moment();
+  const nowFormatted = now.format(DAY_FORMAT);
 
   const [{ data: cityDistricts, isLoading: isCityDistrictsLoading }] = useHttpProxy(`${API_URL}/citydistricts`, {});
+
   const [userContext, setUserContext] = useLocalStorage(process.env.REACT_APP_LOCALSTORAGE_KEY, {
     city: process.env.REACT_APP_DEFAULT_CITY,
     district: process.env.REACT_APP_DEFAULT_DISTRICT,
+    day: nowFormatted,
   });
+
+  const [selectedDate, setSelectedDate] = useState(userContext.day || nowFormatted);
+
   const [
     { data: garbageEvents, isLoading: isGarbageEventsLoading },
     fetchGarbageEvents,
   ] = useHttpProxy(
-    `${API_URL}/garbages/${userContext.city}/${userContext.district}/${getFormattedDay()}`,
+    `${API_URL}/garbages/${userContext.city}/${userContext.district}/${selectedDate}`,
     [],
   );
+
   const [isInitialized, setIsInitialized] = useState(false);
 
   useEffect(() => {
     const isInit = !!userContext && !isGarbageEventsLoading && !isCityDistrictsLoading;
+    if (userContext) {
+      const savedDay = moment(userContext.day, DAY_FORMAT);
+      if (!userContext.day || savedDay.isBefore(now, 'day')) {
+        setUserContext({
+          ...userContext,
+          day: nowFormatted,
+        });
+        setSelectedDate(nowFormatted);
+      }
+    }
     setIsInitialized(isInit);
   }, [isCityDistrictsLoading, isGarbageEventsLoading, userContext]);
 
@@ -57,7 +73,7 @@ const App = () => {
       city: newCity,
       district: newDistrict,
     });
-    fetchGarbageEvents(`${API_URL}/garbages/${newCity}/${newDistrict}/${getFormattedDay()}`);
+    fetchGarbageEvents(`${API_URL}/garbages/${newCity}/${newDistrict}/${selectedDate}`);
   };
 
   const handleDistrictChange = (newDistrict) => {
@@ -65,7 +81,7 @@ const App = () => {
       ...userContext,
       district: newDistrict,
     });
-    fetchGarbageEvents(`${API_URL}/garbages/${userContext.city}/${newDistrict}/${getFormattedDay()}`);
+    fetchGarbageEvents(`${API_URL}/garbages/${userContext.city}/${newDistrict}/${selectedDate}`);
   };
 
   if (!isInitialized) {
@@ -86,7 +102,7 @@ const App = () => {
 
   return (
     <ContentContainer container item xs={8} spacing={10}>
-      <Header date={selectedDate} />
+      <Header day={selectedDate} />
       <Garbage garbages={garbageEvents} />
       <AreaSelection
         city={userContext.city}
