@@ -12,10 +12,13 @@ const useLocalStorage = (key, initialValue) => {
     }
   });
   const setValue = (value) => {
-    // TODO: Handle error
-    const valueToStore = value instanceof Function ? value(storedValue) : value;
-    setStoredValue(valueToStore);
-    window.localStorage.setItem(key, JSON.stringify(valueToStore));
+    try {
+      const valueToStore = value instanceof Function ? value(storedValue) : value;
+      setStoredValue(valueToStore);
+      window.localStorage.setItem(key, JSON.stringify(valueToStore));
+    } catch (error) {
+      throw new Error(error.message);
+    }
   };
 
   return [storedValue, setValue];

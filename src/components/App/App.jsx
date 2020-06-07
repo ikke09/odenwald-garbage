@@ -35,13 +35,11 @@ const App = () => {
     day: nowFormatted,
   });
 
-  const [selectedDate, setSelectedDate] = useState(userContext.day || nowFormatted);
-
   const [
     { data: garbageEvents, isLoading: isGarbageEventsLoading },
     fetchGarbageEvents,
   ] = useHttpProxy(
-    `${API_URL}/garbages/${userContext.city}/${userContext.district}/${selectedDate}`,
+    `${API_URL}/garbages/${userContext.city}/${userContext.district}/${userContext.day || nowFormatted}`,
     [],
   );
 
@@ -49,18 +47,19 @@ const App = () => {
 
   useEffect(() => {
     const isInit = !!userContext && !isGarbageEventsLoading && !isCityDistrictsLoading;
-    if (userContext) {
-      const savedDay = moment(userContext.day, DAY_FORMAT);
-      if (!userContext.day || savedDay.isBefore(now, 'day')) {
-        setUserContext({
-          ...userContext,
-          day: nowFormatted,
-        });
-        setSelectedDate(nowFormatted);
-      }
-    }
     setIsInitialized(isInit);
-  }, [isCityDistrictsLoading, isGarbageEventsLoading, userContext]);
+    const savedDate = moment(userContext.day, DAY_FORMAT);
+    if (userContext && (!userContext.day || savedDate.isBefore(now, 'day'))) {
+      setUserContext({
+        ...userContext,
+        day: nowFormatted,
+      });
+    }
+  }, [isCityDistrictsLoading, isGarbageEventsLoading, userContext, setUserContext, nowFormatted]);
+
+  useEffect(() => {
+    fetchGarbageEvents(`${API_URL}/garbages/${userContext.city}/${userContext.district}/${userContext.day || nowFormatted}`);
+  }, [userContext, fetchGarbageEvents, nowFormatted]);
 
   const handleCityChange = (newCity) => {
     const districtsOfNewCity = cityDistricts[newCity];
@@ -73,7 +72,6 @@ const App = () => {
       city: newCity,
       district: newDistrict,
     });
-    fetchGarbageEvents(`${API_URL}/garbages/${newCity}/${newDistrict}/${selectedDate}`);
   };
 
   const handleDistrictChange = (newDistrict) => {
@@ -81,7 +79,17 @@ const App = () => {
       ...userContext,
       district: newDistrict,
     });
-    fetchGarbageEvents(`${API_URL}/garbages/${userContext.city}/${newDistrict}/${selectedDate}`);
+  };
+
+  const handleDayChange = (direction) => {
+    const savedDate = moment(userContext.day, DAY_FORMAT);
+    const newDate = savedDate.add(direction, 'd');
+    if (!newDate.isBefore(now, 'day')) {
+      setUserContext({
+        ...userContext,
+        day: newDate.format(DAY_FORMAT),
+      });
+    }
   };
 
   if (!isInitialized) {
@@ -102,7 +110,7 @@ const App = () => {
 
   return (
     <ContentContainer container item xs={8} spacing={10}>
-      <Header day={selectedDate} />
+      <Header day={userContext.day || nowFormatted} onChange={handleDayChange} />
       <Garbage garbages={garbageEvents} />
       <AreaSelection
         city={userContext.city}
