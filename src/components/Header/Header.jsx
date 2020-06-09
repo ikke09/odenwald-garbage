@@ -25,13 +25,19 @@ const Header = ({ day, onChange }) => {
     onChange(dir);
   };
 
+  const now = moment();
   const date = moment(day, process.env.REACT_APP_DAY_FORMAT);
 
   return (
     <HeaderWrapper container item spacing={3}>
-      <Grid item onClick={() => handleChange(-1)}>
-        <ArrowBackIosIcon fontSize="large" />
-      </Grid>
+      {
+        date.isAfter(now, 'a')
+        && (
+          <Grid item onClick={() => handleChange(-1)}>
+            <ArrowBackIosIcon fontSize="large" />
+          </Grid>
+        )
+      }
       <Grid item>
         <HeaderContent>{date.format('dddd,')}</HeaderContent>
       </Grid>
