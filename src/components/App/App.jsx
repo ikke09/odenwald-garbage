@@ -22,6 +22,7 @@ const LoadingBar = styled(CircularProgress)({
 
 const API_URL = process.env.REACT_APP_API;
 const DATE_FORMAT = process.env.REACT_APP_DATE_FORMAT;
+const maxDate = moment.utc(process.env.REACT_APP_MAX_DATE, DATE_FORMAT);
 
 const App = () => {
   const now = moment.utc();
@@ -53,7 +54,7 @@ const App = () => {
     const isInit = !!userContext && !isGarbageEventsLoading && !isCityDistrictsLoading;
     setIsInitialized(isInit);
     const savedDate = moment.utc(userContext.date, DATE_FORMAT);
-    if (userContext && (!userContext.date || savedDate.isBefore(now, 'd'))) {
+    if (userContext && (!userContext.date || !savedDate.isBetween(now, maxDate, 'day', '[]'))) {
       setUserContext({
         ...userContext,
         date: nowFormatted,
@@ -93,7 +94,8 @@ const App = () => {
   const handleDayChange = (direction) => {
     const savedDate = moment.utc(userContext.date, DATE_FORMAT);
     const newDate = savedDate.add(direction, 'd');
-    if (!newDate.isBefore(now, 'd')) {
+
+    if (newDate.isBetween(now, maxDate, 'day', '[]')) {
       setUserContext({
         ...userContext,
         date: newDate.format(DATE_FORMAT),

@@ -25,13 +25,15 @@ const Header = ({ dateString, onChange }) => {
     onChange(dir);
   };
 
-  const now = moment();
-  const date = moment(dateString, process.env.REACT_APP_DATE_FORMAT);
+  const DATE_FORMAT = process.env.REACT_APP_DATE_FORMAT;
+  const now = moment.utc();
+  const date = moment.utc(dateString, DATE_FORMAT);
+  const maxDate = moment.utc(process.env.REACT_APP_MAX_DATE, DATE_FORMAT);
 
   return (
     <HeaderWrapper container item spacing={3}>
       {
-        date.isAfter(now, 'a')
+        date.isAfter(now, 'day')
         && (
           <Grid item onClick={() => handleChange(-1)}>
             <ArrowBackIosIcon fontSize="large" />
@@ -44,9 +46,14 @@ const Header = ({ dateString, onChange }) => {
       <Grid item>
         <HeaderContent>{date.format('DD.MM.YYYY')}</HeaderContent>
       </Grid>
-      <Grid item onClick={() => handleChange(1)}>
-        <ArrowForwardIosIcon fontSize="large" />
-      </Grid>
+      {
+        !date.isSameOrAfter(maxDate, 'day')
+        && (
+          <Grid item onClick={() => handleChange(1)}>
+            <ArrowForwardIosIcon fontSize="large" />
+          </Grid>
+        )
+      }
     </HeaderWrapper>
   );
 };
