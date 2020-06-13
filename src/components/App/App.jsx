@@ -21,26 +21,30 @@ const LoadingBar = styled(CircularProgress)({
 });
 
 const API_URL = process.env.REACT_APP_API;
-const DAY_FORMAT = process.env.REACT_APP_DAY_FORMAT;
+const DATE_FORMAT = process.env.REACT_APP_DATE_FORMAT;
 
 const App = () => {
-  const now = moment();
-  const nowFormatted = now.format(DAY_FORMAT);
+  const now = moment.utc();
+  const nowFormatted = now.format(DATE_FORMAT);
 
-  const [{ data: cityDistricts, isLoading: isCityDistrictsLoading }] = useHttpProxy(`${API_URL}/citydistricts`, {});
+  const [{ data: cityDistricts, isLoading: isCityDistrictsLoading }] = useHttpProxy(`${API_URL}/citydistricts`);
 
   const [userContext, setUserContext] = useLocalStorage(process.env.REACT_APP_LOCALSTORAGE_KEY, {
     city: process.env.REACT_APP_DEFAULT_CITY,
     district: process.env.REACT_APP_DEFAULT_DISTRICT,
-    day: nowFormatted,
+    date: nowFormatted,
   });
 
   const [
     { data: garbageEvents, isLoading: isGarbageEventsLoading },
     fetchGarbageEvents,
   ] = useHttpProxy(
-    `${API_URL}/garbages/${userContext.city}/${userContext.district}/${userContext.day || nowFormatted}`,
-    [],
+    `${API_URL}/garbages`,
+    {
+      city: userContext.city,
+      district: userContext.district,
+      date: userContext.date || nowFormatted,
+    },
   );
 
   const [isInitialized, setIsInitialized] = useState(false);
@@ -48,17 +52,22 @@ const App = () => {
   useEffect(() => {
     const isInit = !!userContext && !isGarbageEventsLoading && !isCityDistrictsLoading;
     setIsInitialized(isInit);
-    const savedDate = moment(userContext.day, DAY_FORMAT);
-    if (userContext && (!userContext.day || savedDate.isBefore(now, 'day'))) {
+    const savedDate = moment.utc(userContext.date, DATE_FORMAT);
+    if (userContext && (!userContext.date || savedDate.isBefore(now, 'd'))) {
       setUserContext({
         ...userContext,
-        day: nowFormatted,
+        date: nowFormatted,
       });
     }
-  }, [isCityDistrictsLoading, isGarbageEventsLoading, userContext, setUserContext, nowFormatted]);
+  },
+  [isCityDistrictsLoading, isGarbageEventsLoading, userContext, setUserContext, nowFormatted, now]);
 
   useEffect(() => {
-    fetchGarbageEvents(`${API_URL}/garbages/${userContext.city}/${userContext.district}/${userContext.day || nowFormatted}`);
+    fetchGarbageEvents({
+      city: userContext.city,
+      district: userContext.district,
+      date: userContext.date || nowFormatted,
+    });
   }, [userContext, fetchGarbageEvents, nowFormatted]);
 
   const handleCityChange = (newCity) => {
@@ -82,12 +91,12 @@ const App = () => {
   };
 
   const handleDayChange = (direction) => {
-    const savedDate = moment(userContext.day, DAY_FORMAT);
+    const savedDate = moment.utc(userContext.date, DATE_FORMAT);
     const newDate = savedDate.add(direction, 'd');
-    if (!newDate.isBefore(now, 'day')) {
+    if (!newDate.isBefore(now, 'd')) {
       setUserContext({
         ...userContext,
-        day: newDate.format(DAY_FORMAT),
+        date: newDate.format(DATE_FORMAT),
       });
     }
   };
@@ -110,16 +119,20 @@ const App = () => {
 
   return (
     <ContentContainer container item xs={8} spacing={10}>
-      <Header day={userContext.day || nowFormatted} onChange={handleDayChange} />
-      <Garbage garbages={garbageEvents} />
-      <AreaSelection
-        city={userContext.city}
-        district={userContext.district}
-        cities={Object.keys(cityDistricts)}
-        districts={cityDistricts[userContext.city]}
-        handleCityChange={handleCityChange}
-        handleDistrictChange={handleDistrictChange}
-      />
+      <Header dateString={userContext.date || nowFormatted} onChange={handleDayChange} />
+      {garbageEvents && (
+        <Garbage garbages={garbageEvents} />
+      )}
+      {cityDistricts && (
+        <AreaSelection
+          city={userContext.city}
+          district={userContext.district}
+          cities={Object.keys(cityDistricts)}
+          districts={cityDistricts[userContext.city]}
+          handleCityChange={handleCityChange}
+          handleDistrictChange={handleDistrictChange}
+        />
+      )}
       <Footer />
     </ContentContainer>
   );

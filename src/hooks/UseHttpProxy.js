@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 
-const useHttpProxy = (initialUrl, initialData = null) => {
-  const [data, setData] = useState(initialData);
-  const [url, setUrl] = useState(initialUrl);
+const useHttpProxy = (url, initialBody = {}) => {
+  const [data, setData] = useState(null);
+  const [body, setBody] = useState(initialBody);
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
 
@@ -10,7 +10,14 @@ const useHttpProxy = (initialUrl, initialData = null) => {
     const fetchData = async () => {
       setHasError(false);
       try {
-        const res = await fetch(url);
+        const res = await fetch(url, {
+          body: JSON.stringify(body),
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          method: 'POST',
+          cache: 'no-cache',
+        });
         const result = await res.json();
         setData(result);
       } catch (error) {
@@ -19,8 +26,8 @@ const useHttpProxy = (initialUrl, initialData = null) => {
       setIsLoading(false);
     };
     fetchData();
-  }, [url]);
-  return [{ data, isLoading, hasError }, setUrl];
+  }, [body]);
+  return [{ data, isLoading, hasError }, setBody];
 };
 
 export default useHttpProxy;

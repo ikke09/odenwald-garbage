@@ -20,13 +20,13 @@ const HeaderContent = styled('h1')({
   margin: '0',
 });
 
-const Header = ({ day, onChange }) => {
+const Header = ({ dateString, onChange }) => {
   const handleChange = (dir) => {
     onChange(dir);
   };
 
   const now = moment();
-  const date = moment(day, process.env.REACT_APP_DAY_FORMAT);
+  const date = moment(dateString, process.env.REACT_APP_DATE_FORMAT);
 
   return (
     <HeaderWrapper container item spacing={3}>
@@ -52,7 +52,7 @@ const Header = ({ day, onChange }) => {
 };
 
 Header.propTypes = {
-  day: PropTypes.string.isRequired,
+  dateString: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
 };
 
