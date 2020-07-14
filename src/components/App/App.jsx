@@ -20,28 +20,56 @@ const LoadingBar = styled(CircularProgress)({
   color: '#28587b',
 });
 
-const App = () => {
-  const API_URL = process.env.REACT_APP_API;
-  const DAY = moment().format('DD-MM');
+const API_URL = process.env.REACT_APP_API;
+const DATE_FORMAT = process.env.REACT_APP_DATE_FORMAT;
+const maxDate = moment.utc(process.env.REACT_APP_MAX_DATE, DATE_FORMAT);
 
-  const [{ data: cityDistricts, isLoading: isCityDistrictsLoading }] = useHttpProxy(`${API_URL}/citydistricts`, {});
+const App = () => {
+  const now = moment.utc();
+  const nowFormatted = now.format(DATE_FORMAT);
+
+  const [{ data: cityDistricts, isLoading: isCityDistrictsLoading }] = useHttpProxy(`${API_URL}/citydistricts`);
+
   const [userContext, setUserContext] = useLocalStorage(process.env.REACT_APP_LOCALSTORAGE_KEY, {
     city: process.env.REACT_APP_DEFAULT_CITY,
     district: process.env.REACT_APP_DEFAULT_DISTRICT,
+    date: nowFormatted,
   });
+
   const [
     { data: garbageEvents, isLoading: isGarbageEventsLoading },
     fetchGarbageEvents,
   ] = useHttpProxy(
-    `${API_URL}/garbages/${userContext.city}/${userContext.district}/${DAY}`,
-    [],
+    `${API_URL}/garbages`,
+    {
+      city: userContext.city,
+      district: userContext.district,
+      date: userContext.date || nowFormatted,
+    },
   );
+
   const [isInitialized, setIsInitialized] = useState(false);
 
   useEffect(() => {
     const isInit = !!userContext && !isGarbageEventsLoading && !isCityDistrictsLoading;
     setIsInitialized(isInit);
-  }, [isCityDistrictsLoading, isGarbageEventsLoading, userContext]);
+    const savedDate = moment.utc(userContext.date, DATE_FORMAT);
+    if (userContext && (!userContext.date || !savedDate.isBetween(now, maxDate, 'day', '[]'))) {
+      setUserContext({
+        ...userContext,
+        date: nowFormatted,
+      });
+    }
+  },
+  [isCityDistrictsLoading, isGarbageEventsLoading, userContext, setUserContext, nowFormatted, now]);
+
+  useEffect(() => {
+    fetchGarbageEvents({
+      city: userContext.city,
+      district: userContext.district,
+      date: userContext.date || nowFormatted,
+    });
+  }, [userContext, fetchGarbageEvents, nowFormatted]);
 
   const handleCityChange = (newCity) => {
     const districtsOfNewCity = cityDistricts[newCity];
@@ -54,7 +82,6 @@ const App = () => {
       city: newCity,
       district: newDistrict,
     });
-    fetchGarbageEvents(`${API_URL}/garbages/${newCity}/${newDistrict}/${DAY}`);
   };
 
   const handleDistrictChange = (newDistrict) => {
@@ -62,7 +89,18 @@ const App = () => {
       ...userContext,
       district: newDistrict,
     });
-    fetchGarbageEvents(`${API_URL}/garbages/${userContext.city}/${newDistrict}/${DAY}`);
+  };
+
+  const handleDayChange = (direction) => {
+    const savedDate = moment.utc(userContext.date, DATE_FORMAT);
+    const newDate = savedDate.add(direction, 'd');
+
+    if (newDate.isBetween(now, maxDate, 'day', '[]')) {
+      setUserContext({
+        ...userContext,
+        date: newDate.format(DATE_FORMAT),
+      });
+    }
   };
 
   if (!isInitialized) {
@@ -83,16 +121,20 @@ const App = () => {
 
   return (
     <ContentContainer container item xs={8} spacing={10}>
-      <Header />
-      <Garbage garbages={garbageEvents} />
-      <AreaSelection
-        city={userContext.city}
-        district={userContext.district}
-        cities={Object.keys(cityDistricts)}
-        districts={cityDistricts[userContext.city]}
-        handleCityChange={handleCityChange}
-        handleDistrictChange={handleDistrictChange}
-      />
+      <Header dateString={userContext.date || nowFormatted} onChange={handleDayChange} />
+      {garbageEvents && (
+        <Garbage garbages={garbageEvents} />
+      )}
+      {cityDistricts && (
+        <AreaSelection
+          city={userContext.city}
+          district={userContext.district}
+          cities={Object.keys(cityDistricts)}
+          districts={cityDistricts[userContext.city]}
+          handleCityChange={handleCityChange}
+          handleDistrictChange={handleDistrictChange}
+        />
+      )}
       <Footer />
     </ContentContainer>
   );

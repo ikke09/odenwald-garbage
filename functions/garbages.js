@@ -1,51 +1,50 @@
 const scraper = require('./garbages/scrape');
 const moment = require('moment');
 
+const DATE_FORMAT = process.env.DATE_FORMAT;
+
 const cache = {
-  threshhold: 86400000, // Day as milliseconds
-  lastFetch: 0,
+  threshhold: moment.duration(86400000), // 1 Day in ms
+  lastFetch: moment.utc(),
   garbageDictionary: {}
 };
 
-function parsePath(path) {
-  let url = decodeURI(path);
-  const paramsRegex = new RegExp(/\/\.netlify\/functions\/garbages\/([\wä-ü-ß]+)\/([\wä-ü-ß]+)\/?(\d+\-\d+)?/, 'sg');
-  const paramsResults = paramsRegex.exec(url);
-  if (!paramsResults) return {};
-  const { 1: city, 2: district, 3: day } = paramsResults;
-  return { city, district, day };
-}
-
-async function loadGarbages({ city, district, day = null }) {
-  if (!city || !district) {
-    throw new Error('city & district can not be null!');
+async function loadGarbages({ city, district, date: dateString }) {
+  if (!city) {
+    throw new Error('city can not be null!');
+  }
+  if (!district) {
+    throw new Error('district can not be null!');
+  }
+  if (!dateString) {
+    throw new Error('date can not be null!');
   }
 
-  const timeSinceLastFetch = Date.now() - cache.lastFetch;
+  const now = moment().utc();
+  const timeSinceLastFetch = now.diff(cache.lastFetch);
   const dictionaryKey = `${city}-${district}`;
-  if (timeSinceLastFetch <= cache.threshhold && !!cache.garbageDictionary[dictionaryKey]) {
-    const data = cache.garbageDictionary[dictionaryKey];
-    return filterGarbages(data, day);
-  } else {
-    const data = await scraper.scrape(city, district, moment().year());
-    cache.garbageDictionary[dictionaryKey] = data;
-    cache.lastFetch = Date.now();
-    return filterGarbages(data, day);
-  }
-}
+  const date = moment.utc(dateString, DATE_FORMAT);
 
-function filterGarbages(data, day) {
-  let result = data;
-  if (day && data) {
-    const queryDay = moment(day, 'DD-MM');
-    result = data.filter((d) => d.date.isSame(queryDay, 'day'));
+  const result = [];
+  if (timeSinceLastFetch <= cache.threshhold && !!cache.garbageDictionary[dictionaryKey]) {
+    console.info(`Using cached data for ${dictionaryKey}`);
+    result.push(...cache.garbageDictionary[dictionaryKey]);
+  } else {
+    console.info(`Retreiving new data for ${dictionaryKey}`);
+    const data = await scraper.scrape(city, district, date.year());
+    cache.garbageDictionary[dictionaryKey] = data;
+    cache.lastFetch = now;
+    result.push(...data);
   }
-  return result;
+
+  return result.filter((gd) => gd.date.isSame(date, 'day'));
 }
 
 exports.handler = async function (event, context) {
   try {
-    const garbages = await loadGarbages(parsePath(event.path));
+    const options = event.body ? JSON.parse(event.body) : {};
+    const garbages = await loadGarbages(options);
+    console.info(`${moment.utc().format('DD/MM/YY HH:mm:ss z')}: Successfully loaded garbage data`);
     return {
       statusCode: 200,
       headers: {
@@ -54,13 +53,15 @@ exports.handler = async function (event, context) {
       body: JSON.stringify(garbages),
     };
   } catch (error) {
+    console.error(`${moment.utc().format('DD/MM/YY HH:mm:ss z')}`, error);
     return {
       statusCode: 500,
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        error: 'Could not load garbage data!',
+        message: error.message,
+        stack: process.env.NODE_ENV === 'production' ? '🥞' : error.stack,
       }),
     };
   }
