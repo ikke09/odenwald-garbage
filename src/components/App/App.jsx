@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { CircularProgress, Zoom, Grid } from '@material-ui/core';
+import { Grid } from '@material-ui/core';
 import { styled } from '@material-ui/core/styles';
 import moment from 'moment';
+import LoadingBar from '../LoadingBar/LoadingBar';
 import Garbage from '../Garbage/Garbage';
 import Header from '../Header/Header';
 import Footer from '../Footer/Footer';
@@ -14,10 +15,6 @@ const ContentContainer = styled(Grid)({
   'flex-direction': 'column',
   justifyContent: 'center',
   alignItems: 'center',
-});
-
-const LoadingBar = styled(CircularProgress)({
-  color: '#28587b',
 });
 
 const API_URL = process.env.REACT_APP_API;
@@ -103,39 +100,29 @@ const App = () => {
     }
   };
 
-  if (!isInitialized) {
-    return (
-      <ContentContainer container item xs={8}>
-        <Zoom
-          in={!isInitialized}
-          style={{
-            transitionDelay: !isInitialized ? '800ms' : '0ms',
-          }}
-          unmountOnExit
-        >
-          <LoadingBar size={64} />
-        </Zoom>
-      </ContentContainer>
-    );
-  }
-
   return (
     <ContentContainer container item xs={8} spacing={10}>
-      <Header dateString={userContext.date || nowFormatted} onChange={handleDayChange} />
-      {garbageEvents && (
-        <Garbage garbages={garbageEvents} />
-      )}
-      {cityDistricts && (
-        <AreaSelection
-          city={userContext.city}
-          district={userContext.district}
-          cities={Object.keys(cityDistricts)}
-          districts={cityDistricts[userContext.city]}
-          handleCityChange={handleCityChange}
-          handleDistrictChange={handleDistrictChange}
-        />
-      )}
-      <Footer />
+      { !isInitialized
+        ? (
+          <div>
+            <Header dateString={userContext.date || nowFormatted} onChange={handleDayChange} />
+            {garbageEvents && (
+              <Garbage garbages={garbageEvents} />
+            )}
+            {cityDistricts && (
+              <AreaSelection
+                city={userContext.city}
+                district={userContext.district}
+                cities={Object.keys(cityDistricts)}
+                districts={cityDistricts[userContext.city]}
+                handleCityChange={handleCityChange}
+                handleDistrictChange={handleDistrictChange}
+              />
+            )}
+            <Footer />
+          </div>
+        )
+        : <LoadingBar /> }
     </ContentContainer>
   );
 };
