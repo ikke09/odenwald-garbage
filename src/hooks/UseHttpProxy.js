@@ -26,7 +26,7 @@ const useHttpProxy = (url, initialBody = {}) => {
       setIsLoading(false);
     };
     fetchData();
-  }, [body]);
+  }, [body, url]);
   return [{ data, isLoading, hasError }, setBody];
 };
 
