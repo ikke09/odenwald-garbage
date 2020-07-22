@@ -33,4 +33,7 @@
 
 **.DS_Store
 
+# Custom Ignores
+
 .env*.local
+.vscode/**
